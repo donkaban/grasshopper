@@ -1,9 +1,34 @@
-#include "common.h"
+#include "minigl/common.h"
+
 #include <jni.h>
 #include <android/asset_manager_jni.h>
 
-#define DECLARE(tag,...) JNIEXPORT void JNICALL Java_com_kaban_grasshopper_Native_##tag
 
+
+void test()
+{
+	scene s(45,1,0.1,100); 
+	mesh::ref m (new mesh({
+		{{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}},
+		{{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}},
+		{{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}},
+		{{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}}
+	}));
+	auto mat = std::make_shared<material>("shaders/test.shader");
+	auto t1 = std::make_shared<image>("textures/green.tga");
+	auto t2 = std::make_shared<image>("textures/red.tga");
+
+	auto obj = std::make_shared<object>(m,mat);
+	s.add(obj);
+
+
+}
+
+
+
+
+
+#define DECLARE(tag,...) JNIEXPORT void JNICALL Java_com_kaban_grasshopper_Native_##tag
 extern "C" {
 
 DECLARE(init)(JNIEnv *env, jobject obj, jobject assetMgr)
@@ -26,6 +51,10 @@ DECLARE(resize)(JNIEnv *env, jobject obj, jint w, jint h)
     glDepthFunc(GL_LEQUAL); 
     glCullFace(GL_BACK);    
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    test();
+
+
 }
 
 }
