@@ -1,5 +1,6 @@
 #ifndef __GRASSHOPPER_MATH__
 #define __GRASSHOPPER_MATH__
+
 #include <cmath>
 #include <cstring>
 #include <initializer_list>
@@ -12,6 +13,7 @@ struct vec3
 {
     using cref = const vec3 &;
 public:
+    static const int size = 3;
     union
     {
         struct {float x, y, z;};

@@ -10,7 +10,6 @@ image::image(strref filename)
         uint8_t  bits;                
         uint8_t  descriptor;         
     } header;
-
     stream f(filename);
     f.read((char *) &header, sizeof(header));
     _bpp    = header.bits;
@@ -23,8 +22,7 @@ image::image(strref filename)
     f.read((char *)&_data[0], _data.size());
     for(auto i = _data.begin(); i < _data.end(); i+=_bpp/8)
         std::swap(*i, *(i+2));   
-    D_LOG("create texture '%s' %dx%dx%d",filename.c_str(), _width,_height,_bpp);
-
+    INFO("create texture '%s' %dx%dx%d",filename.c_str(), _width,_height,_bpp);
     auto BPP = (_bpp == 32) ? GL_RGBA : GL_RGB;
     glGenTextures(1,&_id);
     glBindTexture(GL_TEXTURE_2D, _id);

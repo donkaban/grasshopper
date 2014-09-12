@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <string>
 #include <cstdlib>
+#include <chrono>
 
 
 #include <android/log.h>
@@ -19,33 +20,17 @@
 using strref = const std::string &;
 
 #define TAG "[GRASSHOPPER]"
-#define D_LOG(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
-#define E_LOG(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
-#define FATAL(...)  {E_LOG(__VA_ARGS__); std::abort();}
+#define INFO(...)  __android_log_print(ANDROID_LOG_WARN,TAG,__VA_ARGS__)
+#define ERROR(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
+#define FATAL(...)  {ERROR(__VA_ARGS__); std::abort();}
 
-struct stream
+template <typename T>
+struct Iref 
 {
-public:
-    stream(strref);
-   ~stream();
+public: 
+    using ref  = std::shared_ptr<T>;
+    using cref = const ref &;
 
-    void open(strref);
-    void close();
-    void read(char *, size_t);
-    void seek(long pos);
-    size_t size() const;
-    std::string str();
-
-static void init(AAssetManager *);
-
-private:
-    static AAssetManager * _am;
-    AAsset * _file;
-    size_t   _size {};
-};
-
-struct Ibindable
-{
     int getID() const {return _id;}
 protected:
     GLuint _id;
@@ -65,45 +50,46 @@ struct vertex
         binormal(b),
         normal(n)
     {}    
-
 };
 
-
-class material : public Ibindable
+struct attr_t 
+{   
+    int p,u,t,b,n;                         
+    void lookup(int);
+}; 
+struct unif_t 
 {
-    friend class scene;
-public:
-    using ref  = std::shared_ptr<material>;
-    using cref = const ref &;
+    int model,iview,prj,time;
+    int t[4];  
+    void lookup(int);
+}; 
 
+struct material : public Iref<material>
+{
     material(strref);
     virtual ~material();
-private:    
-                
+
+    attr_t attributes;                   
+    unif_t uniforms;
 };
 
-class mesh : public Ibindable
+class mesh : public Iref<mesh>
 {
-    friend class scene;
 public:
-    using ref  = std::shared_ptr<mesh>;
-    using cref = const ref &;
-
     mesh(strref);
     mesh(const std::vector<vertex> &);
     virtual ~mesh();
+    
+    void render(material::cref);
 
 private:
     std::vector<vertex>   vertexes;
+    int indicies {};
 };
 
-class image : public Ibindable
+class image : public Iref<image>
 {
-    friend class scene;
 public:
-    using ref  = std::shared_ptr<image>;
-    using cref = const ref &;
-
     image(strref);
    ~image();
 
@@ -114,25 +100,21 @@ private:
     int _height;
 };
 
-class object
+class object : public Iref<object>
 {
-    friend class scene;
+    friend class scene; // nb: only hackaton style - no time for getters/setters :)
 public: 
-    using ref  = std::shared_ptr<object>;
-    using cref = const ref &;
-
     object(mesh::cref, material::cref);
    ~object();   
 
-   void render() {};
-
+   void render(material::cref);
+   void set_texture(int, image::cref);
 private:
     bool          _enabled = true;
     mat4          _transform;
     mesh::ref     _mesh;
     material::ref _material;
-    image::ref    _texture0;
-    image::ref    _texture1;
+    image::ref    _texture[4];
 };
 
 class scene
@@ -141,16 +123,38 @@ public:
     scene(float,float,float,float);
     void add(object::cref);
     void translate(vec3::cref);
+    void rotate(vec3::cref);
     void render();
+
+    static float time(); 
 
 private:
     mat4 prj_m;     
     mat4 iview_m;    
     std::vector<object::ref> render_list;
+    static std::chrono::time_point<std::chrono::system_clock> start_time;
 };
 
+struct stream
+{
+public:
+    stream(strref);
+   ~stream();
 
+    void open(strref);
+    void close();
+    void read(char *, size_t);
+    void seek(long pos);
+    size_t size() const;
+    std::string str();
+    
+    static void init(AAssetManager *);
 
+private:
+    static AAssetManager * _am;
+    AAsset * _file;
+    size_t   _size {};
+};
 
 #endif
 

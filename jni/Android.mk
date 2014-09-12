@@ -2,18 +2,17 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := grasshopper
 
-MINIGL_SRC := 	minigl/impl/minimath.cpp    \
-				minigl/impl/stream.cpp      \
-				minigl/impl/auxgl.cpp       \
-				minigl/impl/image.cpp       \
-				minigl/impl/material.cpp    \
-				minigl/impl/mesh.cpp        \
-				minigl/impl/object.cpp      \
-				minigl/impl/scene.cpp       \
+MINIGL_SRC := 	microGL/impl/minimath.cpp    \
+				microGL/impl/stream.cpp      \
+				microGL/impl/image.cpp       \
+				microGL/impl/material.cpp    \
+				microGL/impl/mesh.cpp        \
+				microGL/impl/object.cpp      \
+				microGL/impl/scene.cpp       \
 
 LOCAL_SRC_FILES :=  main.cpp $(MINIGL_SRC)
 
 
 LOCAL_LDLIBS := -llog -landroid -lGLESv2
-LOCAL_CFLAGS := -Ijni/minigl
+LOCAL_CFLAGS := -Ijni/microGL
 include $(BUILD_SHARED_LIBRARY)
