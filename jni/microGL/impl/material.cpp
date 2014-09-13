@@ -16,7 +16,6 @@ void _check(GLuint id)
             FATAL("error compile shader: %s",message.c_str());
         }
     }
-  
 }
 
 material::material(strref sh)
@@ -40,15 +39,15 @@ material::material(strref sh)
     glLinkProgram(_id);   
     attributes.lookup(_id);
     uniforms.lookup(_id);
-}	
+}   
 
 material::~material()
 {
- 	if(!glIsProgram(_id)) return;
+    if(!glIsProgram(_id)) return;
     glDeleteProgram(_id);
 }
 
-void attr_t::lookup(int id)
+void gl::attr_t::lookup(int id)
 {
     p = glGetAttribLocation(id,"position");
     u = glGetAttribLocation(id,"uv");
@@ -57,7 +56,7 @@ void attr_t::lookup(int id)
     n = glGetAttribLocation(id,"normal");
     INFO("lookup: p[%d] u[%d] t[%d] b[%d] n[%d]",p,u,t,b,n);
 }
-void unif_t::lookup(int id)
+void gl::unif_t::lookup(int id)
 {
     model = glGetUniformLocation(id,"u_model");
     iview = glGetUniformLocation(id,"u_iview");

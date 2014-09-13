@@ -16,11 +16,11 @@ std::string stream::str()
     read(&contents[0],_size);
     return contents;
 }
-	   stream::stream(strref filename)      {open(filename);}
-	   stream::~stream() 				    {if(_file) close();}
-void   stream::close() 					    {AAsset_close(_file);} 
+       stream::stream(strref filename)      {open(filename);}
+       stream::~stream()                    {if(_file) close();}
+void   stream::close()                      {AAsset_close(_file);} 
 void   stream::read(char *buf, size_t size) {AAsset_read (_file,buf,size);}
-void   stream::seek(long pos) 		        {AAsset_seek(_file, pos,SEEK_SET);}
+void   stream::seek(long pos)               {AAsset_seek(_file, pos,SEEK_SET);}
 void   stream::init(AAssetManager * am)     {_am = am;}
 size_t stream::size() const                 {return _size;}
 

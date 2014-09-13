@@ -35,6 +35,6 @@ image::image(strref filename)
 
 image::~image()
 {
-    if(!glIsTexture(_id)) return;
+    if(!glIsTexture(getID())) return;
     glDeleteTextures(1, &_id);
 }

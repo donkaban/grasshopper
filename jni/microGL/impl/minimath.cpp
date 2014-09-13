@@ -1,5 +1,7 @@
 #include "minimath.h"
 
+namespace math {
+
 vec3::vec3(float _x, float _y ,float _z) : x(_x), y(_y),z(_z) {}
 
 vec3   vec3::operator+  (cref a)  const {return vec3(x + a.x, y + a.y, z+ a.z);}
@@ -13,12 +15,12 @@ bool   vec3::operator== (cref a)  const {return cmp(a);}
 bool   vec3::operator!= (cref a)  const {return !cmp(a);}
 
 bool  vec3::cmp(cref a)   const {return ((x == a.x) && (y == a.y) && (z == a.z));}
-float vec3::len()  	    const {return std::sqrt(x * x + y * y + z * z);}
+float vec3::len()         const {return std::sqrt(x * x + y * y + z * z);}
 float vec3::dot(cref a)   const {return x * a.x + y * a.y + z * a.z;}
 vec3  vec3::cross(cref a) const {return vec3(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);}
 vec3  vec3::norm()
 {
-	auto ilen = 1.0/len();
+    auto ilen = 1.0/len();
     x *= ilen; y *= ilen; z *= ilen;
     return *this;
 }
@@ -60,17 +62,24 @@ mat4 mat4::rot_y(float a) {auto s=std::sin(a); auto c=std::cos(a); return mat4({
 mat4 mat4::rot_z(float a) {auto s=std::sin(a); auto c=std::cos(a); return mat4({c,-s,0,0,s,c,0,0,0,0,1,0,0,0,0,1});}
 mat4 mat4::scale(vec3::cref v)     {return {v.x,0,0,0,0,v.y,0,0,0,0,v.z,0,0,0,0,1};}
 mat4 mat4::translate(vec3::cref v) {return {1,0,0,v.x,0,1,0,v.y,0,0,1,v.z,0,0,0,1};}
-mat4 mat4::perspective(float fov,float aspect,float n,float f)
+
+mat4 mat4::perspective(float fov,float aspect,float n,float f) // fix: unsafe!
 {
     float h = std::tan(fov * DEG2RAD * .5);
     float w = h * aspect;
     float dz = f-n;
     return mat4({1/w,0,0,0,0,1/h,0,0,0,0,-(f+n)/dz,-2*f*n/dz,0,0,-1,0});
 }
-mat4 mat4::frustum(float l, float r, float b, float t, float n, float f)
+
+mat4 mat4::frustum(float l, float r, float b, float t, float n, float f) //fix: unsafe!
 {
     float dx = r - l;
     float dy = t - b;
     float dz = f - n;
     return mat4({2.0f*n/dx,0,(r+l)/dx,0,0,2.0f*n/dy,(t+b)/dy,0,0,0,-(f+n)/dz,-2.0f*f*n/dz,0,0,-1,0});
+}
+
+const vec3 vec3::zero = vec3(0,0,0);
+const mat4 mat4::identity = mat4({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1});
+
 }

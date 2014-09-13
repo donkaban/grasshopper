@@ -16,7 +16,6 @@ varying vec3 v_normal;
     uniform mat4  u_iview; 
     void main()
     {
-        v_position = position;
         v_uv = uv;
         gl_Position = vec4(position,1) * u_model * u_iview * u_prj ;
     }
@@ -34,5 +33,4 @@ varying vec3 v_normal;
         
         gl_FragColor = col1 - col2* sin(u_time);
     }
-
 #endif

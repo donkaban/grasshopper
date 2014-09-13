@@ -9,90 +9,65 @@
 #include <cstdlib>
 #include <chrono>
 
-
 #include <android/log.h>
 #include <android/asset_manager.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
 #include "minimath.h"
+#include "gl_detail.h"
 
 using strref = const std::string &;
 
 #define TAG "[GRASSHOPPER]"
 #define INFO(...)  __android_log_print(ANDROID_LOG_WARN,TAG,__VA_ARGS__)
-#define ERROR(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
-#define FATAL(...)  {ERROR(__VA_ARGS__); std::abort();}
+#define ERROR(...) __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
+#define FATAL(...) {ERROR(__VA_ARGS__); std::abort();}
 
-template <typename T>
+template <typename T, typename ...A>
 struct Iref 
 {
 public: 
     using ref  = std::shared_ptr<T>;
     using cref = const ref &;
 
-    int getID() const {return _id;}
+    GLint   getID()   const {return _id;}
+    bool    checkID() const {return _id!=-1;}
+
+    static std::shared_ptr<T> make(A && ... args) {return std::make_shared<T>(args...);}
 protected:
-    GLuint _id;
+    GLuint _id = -1;
 };
 
-struct vertex
-{
-    vec3 position;  
-    vec3 uv;  
-    vec3 tangent;  
-    vec3 binormal;
-    vec3 normal; 
-    vertex(vec3::cref p, vec3::cref u,vec3::cref t,vec3::cref b,vec3::cref n):
-        position(p),
-        uv(u),
-        tangent(t),
-        binormal(b),
-        normal(n)
-    {}    
-};
 
-struct attr_t 
-{   
-    int p,u,t,b,n;                         
-    void lookup(int);
-}; 
-struct unif_t 
-{
-    int model,iview,prj,time;
-    int t[4];  
-    void lookup(int);
-}; 
-
-struct material : public Iref<material>
-{
-    material(strref);
-    virtual ~material();
-
-    attr_t attributes;                   
-    unif_t uniforms;
-};
-
-class mesh : public Iref<mesh>
+class material : public Iref<material,strref>
 {
 public:
-    mesh(strref);
-    mesh(const std::vector<vertex> &);
-    virtual ~mesh();
-    
-    void render(material::cref);
-
+    material(strref);
+    virtual ~material();
+    inline const gl::attr_t & atr() const {return attributes;};
+    inline const gl::unif_t & uni() const {return uniforms;}
 private:
-    std::vector<vertex>   vertexes;
+    gl::attr_t attributes;                   
+    gl::unif_t uniforms;
+};
+
+class mesh : public Iref<mesh,const std::initializer_list<gl::vertex> &>
+{
+public:
+    mesh(const std::initializer_list<gl::vertex> &);
+    virtual ~mesh();
+    void render(material::cref);
+private:
+    std::vector<gl::vertex>   vertexes;
     int indicies {};
 };
 
-class image : public Iref<image>
+class image : public Iref<image, strref>
 {
 public:
     image(strref);
-   ~image();
-
+    virtual ~image();
 private:    
     std::vector<uint8_t> _data;
     int _bpp;    
@@ -100,60 +75,60 @@ private:
     int _height;
 };
 
-class object : public Iref<object>
+class object : public Iref<object, mesh::cref, material::cref>
 {
-    friend class scene; // nb: only hackaton style - no time for getters/setters :)
+    friend class scene; // nb: ugly hackaton style - no time for getters/setters :)
 public: 
     object(mesh::cref, material::cref);
    ~object();   
-
    void render(material::cref);
    void set_texture(int, image::cref);
+
 private:
     bool          _enabled = true;
-    mat4          _transform;
+    math::mat4    _transform;
     mesh::ref     _mesh;
     material::ref _material;
     image::ref    _texture[4];
 };
 
-class scene
+class scene : public Iref<scene, float,float,float,float>
 {
 public:
     scene(float,float,float,float);
     void add(object::cref);
-    void translate(vec3::cref);
-    void rotate(vec3::cref);
+    void translate(math::vec3::cref);
+    void rotate(math::vec3::cref);
     void render();
 
     static float time(); 
 
 private:
-    mat4 prj_m;     
-    mat4 iview_m;    
+    math::mat4 prj_m;     
+    math::mat4 iview_m;    
     std::vector<object::ref> render_list;
     static std::chrono::time_point<std::chrono::system_clock> start_time;
 };
 
-struct stream
+struct stream // motivation : RIAA
 {
 public:
     stream(strref);
    ~stream();
-
-    void open(strref);
-    void close();
-    void read(char *, size_t);
-    void seek(long pos);
+    void   read(char *, size_t);
+    void   seek(long pos);
     size_t size() const;
     std::string str();
     
     static void init(AAssetManager *);
-
 private:
-    static AAssetManager * _am;
+    void open(strref);
+    void close();
+   
     AAsset * _file;
     size_t   _size {};
+    static AAssetManager * _am;
+
 };
 
 #endif
