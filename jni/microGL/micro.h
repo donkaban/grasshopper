@@ -15,7 +15,7 @@
 #include <GLES2/gl2ext.h>
 
 #include "minimath.h"
-#include "gl_detail.h"
+#include "detail.h"
 
 using strref = const std::string &;
 
@@ -52,15 +52,20 @@ private:
     gl::unif_t uniforms;
 };
 
-class mesh : public Iref<mesh,const std::initializer_list<gl::vertex> &>
+class mesh : public Iref<mesh,const std::initializer_list<gl::vertex> &,const std::initializer_list<uint16_t> &,GLenum>
 {
 public:
-    mesh(const std::initializer_list<gl::vertex> &);
+    mesh(const std::initializer_list<gl::vertex> &, const std::initializer_list<uint16_t> &, GLenum draw=GL_TRIANGLES);
     virtual ~mesh();
     void render(material::cref);
+
+    static ptr make_plane(float, float);
+    static ptr make_cube (float, float, float);
+ 
 private:
-    std::vector<gl::vertex>   vertexes;
-    int indicies {};
+    std::vector<gl::vertex>  vertexes;
+    std::vector<uint16_t>    indicies;
+    GLenum                   draw_by;
 };
 
 class image : public Iref<image, strref>

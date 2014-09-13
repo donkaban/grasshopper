@@ -1,4 +1,4 @@
-#include "common.h"
+#include "micro.h"
 
 image::image(strref filename) 
 {

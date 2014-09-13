@@ -1,4 +1,4 @@
-#include "common.h"
+#include "micro.h"
 using namespace math;
 
 object::object(mesh::cref _mesh, material::cref _mat):

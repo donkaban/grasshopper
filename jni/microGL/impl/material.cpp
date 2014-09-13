@@ -1,4 +1,4 @@
-#include "common.h"
+#include "micro.h"
 
 void _check(GLuint id)  
 {
@@ -51,10 +51,8 @@ void gl::attr_t::lookup(int id)
 {
     p = glGetAttribLocation(id,"position");
     u = glGetAttribLocation(id,"uv");
-    t = glGetAttribLocation(id,"tangent");
-    b = glGetAttribLocation(id,"binormal");
     n = glGetAttribLocation(id,"normal");
-    INFO("lookup: p[%d] u[%d] t[%d] b[%d] n[%d]",p,u,t,b,n);
+    INFO("lookup: p[%d] u[%d] n[%d]",p,u,n);
 }
 void gl::unif_t::lookup(int id)
 {

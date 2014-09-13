@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <android/asset_manager_jni.h>
 #include <mutex>
-#include "common.h"
+#include "micro.h"
 
 #define LOCK_GUARD  std::lock_guard<std::mutex> lock(locker);
 #define DECLARE(tag,...) JNIEXPORT void JNICALL Java_com_kaban_grasshopper_Native_##tag

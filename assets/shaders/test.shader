@@ -1,14 +1,10 @@
 varying vec3 v_position;
 varying vec3 v_uv;
-varying vec3 v_tangent;
-varying vec3 v_binormal;
 varying vec3 v_normal;
 
 #ifdef VERTEX
     attribute vec3 position;
     attribute vec3 uv;
-    attribute vec3 tangent;
-    attribute vec3 binormal;
     attribute vec3 normal;
 
     uniform mat4  u_model;

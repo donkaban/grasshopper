@@ -1,4 +1,4 @@
-#include "microGL/common.h"
+#include "microGL/micro.h"
 
 class my_app : public app
 {
@@ -8,12 +8,8 @@ class my_app : public app
         _scene = scene::make(45,w/h,0.1,100);
         _scene->translate(math::vec3(0,0,-5));
 
-        auto my_mesh = mesh::make({
-            {-1, 1, 0,  0,1,0,      0,0,0,  0,0,0,  0,0,0},
-            {-1,-1, 0,  0,0,0,      0,0,0,  0,0,0,  0,0,0},
-            { 1, 1, 0,  1,1,0,      0,0,0,  0,0,0,  0,0,0},
-            { 1,-1, 0,  1,0,0,      0,0,0,  0,0,0,  0,0,0}
-        });
+        auto my_mesh = mesh::make_cube(1,1,1);
+               
         
         auto my_mat = material::make("shaders/test.shader");
         auto t1  = image::make("textures/green.tga");
@@ -26,7 +22,7 @@ class my_app : public app
 
     void onUpdate(float dt) override
     {
-       my_obj->rotate(math::vec3(0,0, .01)) ;
+       my_obj->rotate(math::vec3(0.01,0.01, .01)) ;
     }   
 private:
     object::ptr     my_obj;

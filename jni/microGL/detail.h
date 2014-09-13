@@ -12,8 +12,6 @@ struct vertex
         {
             math::vec3 position;  
             math::vec3 uv;           // :)  
-            math::vec3 tangent;  
-            math::vec3 binormal;
             math::vec3 normal;
         };
         float data[15];
@@ -23,7 +21,7 @@ struct vertex
 
 struct attr_t 
 {   
-    int p,u,t,b,n;                         
+    int p,u,n;                         
     void lookup(int);
 }; 
 struct unif_t 
