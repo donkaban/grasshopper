@@ -15,17 +15,17 @@ void object::set_texture(int n, image::cref img) {_texture[n] = img;} //fix: uns
 void object::translate(vec3::cref v) {_transform *= mat4::translate(v);}
 void object::rotate(vec3::cref v)    {_transform *= mat4::rot_x(v.x) * mat4::rot_y(v.y) * mat4::rot_z(v.z) ;}
 
-void object::render(material::cref mat)
+void object::render()
 {
-    glUniformMatrix4fv(mat->uni().model, 1,GL_FALSE,_transform.data);
+    glUniformMatrix4fv(_material->uni().model, 1,GL_FALSE,_transform.data);
     for(auto i=0; i< 4; i++)
     {   
-        if(mat->uni().t[i] !=-1 && _texture[i])
+        if(_material->uni().t[i] !=-1 && _texture[i])
         {
             glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_2D, _texture[0]->getID()); 
-            glUniform1i(mat->uni().t[i],i);
+            glUniform1i(_material->uni().t[i],i);
         } 
     }
-    _mesh->render(mat); 
+    _mesh->render(_material); 
  }

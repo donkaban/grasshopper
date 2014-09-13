@@ -1,5 +1,5 @@
-#ifndef __GRASSHOPPER_COMMON__
-#define __GRASSHOPPER_COMMON__
+#ifndef __GRASSHOPPER_MICROGL_API__
+#define __GRASSHOPPER_MICROGL_API__
 
 #include <iostream>
 #include <memory>
@@ -36,7 +36,7 @@ public:
 
     static std::shared_ptr<T> make(A && ... args) {return std::make_shared<T>(args...);}
 protected:
-    GLuint _id = -1;
+    GLuint _id  = -1;
 };
 
 
@@ -86,7 +86,8 @@ class object : public Iref<object, mesh::cref, material::cref>
 public: 
     object(mesh::cref, material::cref);
    ~object();   
-    void render(material::cref);
+    void render();
+
     void set_texture(int, image::cref);
     void translate(math::vec3::cref);
     void rotate(math::vec3::cref);
@@ -106,9 +107,9 @@ public:
     void translate(math::vec3::cref);
     void rotate(math::vec3::cref);
     void render();
+    void wire(bool);   
 
     static float time(); 
-
 private:
     math::mat4 prj_m;     
     math::mat4 iview_m;    
@@ -122,45 +123,32 @@ public:
     stream(strref);
    ~stream();
     void   read(char *, size_t);
-    void   seek(long pos);
+    void   seek(size_t pos);
     size_t size() const;
     std::string str();
     
     static void init(AAssetManager *);
 private:
-    void open(strref);
-    void close();
-   
     AAsset * _file;
     size_t   _size {};
     static AAssetManager * _am;
-
 };
 
-struct app : public Iref<app>  // extremely unsafe :)
+class app : public Iref<app>  
 {
 public:
-    virtual void onInit(float,float)   {};
-    virtual void onUpdate(float)       {};
-    virtual void onExit()              {};
+    virtual void onInit()        {};
+    virtual void onUpdate(float) {};
+    virtual void onExit()        {};
+    inline scene::ptr & get_scene()       {return _scene;}
+    inline void set_scene(scene::cref &s) {_scene = s;}
+    
+private:
     scene::ptr _scene;
 };
 
 extern app::ptr __APP_INSTANCE();  
 #define RUN_APP(name) app::ptr __APP_INSTANCE() {return std::shared_ptr<app>(new name());}  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif

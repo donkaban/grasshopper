@@ -22,20 +22,19 @@ DECLARE(draw)(JNIEnv *env, jobject obj)
     LOCK_GUARD
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     application->onUpdate(1);
-    application->_scene->render();
+    application->get_scene()->render();
 }
 
 DECLARE(resize)(JNIEnv *env, jobject obj, jint w, jint h)
 {
     LOCK_GUARD
     INFO("viewport resize to %dx%d\n",w,h);
-    glLineWidth(10);
-    glViewport(0, 0, w, h);
-    glClearColor(.1, .1, .2, 0);
+    glViewport(0,0,w,h);
+    glClearColor(.2, .2, .3, 0);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
     glDepthFunc(GL_LEQUAL); 
-    application->onInit(w,h);
+    application->set_scene(scene::make(45,static_cast<float>(w)/static_cast<float>(h),0.1,100));
+    application->onInit();
 }
 
 
