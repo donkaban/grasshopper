@@ -28,8 +28,8 @@ template <typename T, typename ...A>
 struct Iref 
 {
 public: 
-    using ref  = std::shared_ptr<T>;
-    using cref = const ref &;
+    using ptr  = std::shared_ptr<T>;
+    using cref = const ptr &;
 
     GLint   getID()   const {return _id;}
     bool    checkID() const {return _id!=-1;}
@@ -81,15 +81,16 @@ class object : public Iref<object, mesh::cref, material::cref>
 public: 
     object(mesh::cref, material::cref);
    ~object();   
-   void render(material::cref);
-   void set_texture(int, image::cref);
-
+    void render(material::cref);
+    void set_texture(int, image::cref);
+    void translate(math::vec3::cref);
+    void rotate(math::vec3::cref);
 private:
     bool          _enabled = true;
     math::mat4    _transform;
-    mesh::ref     _mesh;
-    material::ref _material;
-    image::ref    _texture[4];
+    mesh::ptr     _mesh;
+    material::ptr _material;
+    image::ptr    _texture[4];
 };
 
 class scene : public Iref<scene, float,float,float,float>
@@ -106,7 +107,7 @@ public:
 private:
     math::mat4 prj_m;     
     math::mat4 iview_m;    
-    std::vector<object::ref> render_list;
+    std::vector<object::ptr> render_list;
     static std::chrono::time_point<std::chrono::system_clock> start_time;
 };
 
@@ -130,6 +131,32 @@ private:
     static AAssetManager * _am;
 
 };
+
+struct app : public Iref<app>  // extremely unsafe :)
+{
+public:
+    virtual void onInit(float,float)   {};
+    virtual void onUpdate(float)       {};
+    virtual void onExit()              {};
+    scene::ptr _scene;
+};
+
+extern app::ptr __APP_INSTANCE();  
+#define RUN_APP(name) app::ptr __APP_INSTANCE() {return std::shared_ptr<app>(new name());}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif
 

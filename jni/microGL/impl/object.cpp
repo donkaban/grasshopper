@@ -1,4 +1,5 @@
 #include "common.h"
+using namespace math;
 
 object::object(mesh::cref _mesh, material::cref _mat):
     _mesh(_mesh),
@@ -8,11 +9,12 @@ object::object(mesh::cref _mesh, material::cref _mat):
 }
 
 object::~object()
-{
-    INFO("destroy object");
-}
+{}
 
 void object::set_texture(int n, image::cref img) {_texture[n] = img;} //fix: unsafe! 
+void object::translate(vec3::cref v) {_transform *= mat4::translate(v);}
+void object::rotate(vec3::cref v)    {_transform *= mat4::rot_x(v.x) * mat4::rot_y(v.y) * mat4::rot_z(v.z) ;}
+
 void object::render(material::cref mat)
 {
     glUniformMatrix4fv(mat->uni().model, 1,GL_FALSE,_transform.data);
