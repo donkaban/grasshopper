@@ -2,7 +2,7 @@
 
 using namespace math;
 
-mesh::mesh(const std::initializer_list<gl::vertex>  &v, const std::initializer_list<uint16_t> &i, GLenum draw) :
+mesh::mesh(const std::vector<gl::vertex>  &v, const std::vector<uint16_t> &i, GLenum draw) :
     vertexes(std::move(v)),
     indicies(std::move(i)),
     draw_by(draw)
@@ -35,12 +35,37 @@ void mesh::render(material::cref mat)
 
 mesh::ptr mesh::make_plane(float width, float height)
 {
-    auto w = width/2.f;
-    auto h = height/2.f;
+    auto w = width * .5f;
+    auto h = height * .5f;
     return make({
         { w, h,0,1,1,0,0,0,1},{-w, h,0,0,1,0,0,0,1},{-w,-h,0,0,0,0,0,0,1},{ w,-h,0,1,0,0,0,0,1}},
         {0,1,2,2,3,0}, 
         GL_TRIANGLES);
+}
+
+mesh::ptr mesh::make_tile(float size, uint16_t slice)
+{
+    auto sz = size * .5f;
+    float xy_step  = size / slice;
+    float st_step = 1.0  / slice;    
+    std::vector<gl::vertex>  _v;
+    std::vector<uint16_t>    _i;
+    float i = 1;
+    for (auto y = -sz, t = 0.f; y <= sz; y += xy_step, t+=st_step)
+        for (auto x = -sz, s = 0.f; x <= sz; x += xy_step, s += st_step)
+        {    
+            _v.push_back({x, y, 0, s, t, i, 0, 0, 1});
+            i = -i;
+        }    
+    for(uint sq = 0; sq < slice * slice; sq++)
+    {
+         uint16_t o = sq / slice + sq;
+         uint16_t r = o + 1;
+         uint16_t u = r + slice ;
+         uint16_t d = u + 1;
+        _i.insert(_i.end(),{o,r,d,d,u,o}); 
+    }
+    return make(_v,_i,GL_TRIANGLES);
 }
 
 mesh::ptr mesh::make_cube(float x, float y, float t)
@@ -58,3 +83,5 @@ mesh::ptr mesh::make_cube(float x, float y, float t)
     {0,2,1,0,3,2,4,5,6,4,6,7,8,9,10,8,10,11,12,15,14,12,14,13,16,17,18,16,18,19,20,23,22,20,22,21},
     GL_TRIANGLES);         
 }
+
+

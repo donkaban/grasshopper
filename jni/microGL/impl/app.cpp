@@ -33,7 +33,7 @@ DECLARE(resize)(JNIEnv *env, jobject obj, jint w, jint h)
     glClearColor(.2, .2, .3, 0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL); 
-    application->set_scene(scene::make(45,static_cast<float>(w)/static_cast<float>(h),0.1,100));
+    application->set_scene(scene::make(45,static_cast<float>(w)/static_cast<float>(h),0.1,60));
     application->onInit();
 }
 

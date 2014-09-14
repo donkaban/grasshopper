@@ -52,14 +52,16 @@ private:
     gl::unif_t uniforms;
 };
 
-class mesh : public Iref<mesh,const std::initializer_list<gl::vertex> &,const std::initializer_list<uint16_t> &,GLenum>
+class mesh : public Iref<mesh,const std::vector<gl::vertex> &,const std::vector<uint16_t> &,GLenum>
 {
 public:
-    mesh(const std::initializer_list<gl::vertex> &, const std::initializer_list<uint16_t> &, GLenum draw=GL_TRIANGLES);
+    mesh(const std::vector<gl::vertex> &, const std::vector<uint16_t> &, GLenum draw=GL_TRIANGLES);
     virtual ~mesh();
     void render(material::cref);
 
     static ptr make_plane(float, float);
+    static ptr make_tile(float, uint16_t);
+
     static ptr make_cube (float, float, float);
  
 private:
