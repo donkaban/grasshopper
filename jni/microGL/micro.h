@@ -60,8 +60,6 @@ public:
     void render(material::cref);
 
     static ptr make_plane(float, float);
-    static ptr make_tile(float, uint16_t);
-
     static ptr make_cube (float, float, float);
  
 private:
@@ -70,12 +68,11 @@ private:
     GLenum                   draw_by;
 };
 
-class image : public Iref<image, strref>
+struct image : public Iref<image, strref>
 {
-public:
     image(strref);
     virtual ~image();
-private:    
+
     std::vector<uint8_t> _data;
     int _bpp;    
     int _width;   

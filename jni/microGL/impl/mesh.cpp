@@ -43,31 +43,6 @@ mesh::ptr mesh::make_plane(float width, float height)
         GL_TRIANGLES);
 }
 
-mesh::ptr mesh::make_tile(float size, uint16_t slice)
-{
-    auto sz = size * .5f;
-    float xy_step  = size / slice;
-    float st_step = 1.0  / slice;    
-    std::vector<gl::vertex>  _v;
-    std::vector<uint16_t>    _i;
-    float i = 1;
-    for (auto y = -sz, t = 0.f; y <= sz; y += xy_step, t+=st_step)
-        for (auto x = -sz, s = 0.f; x <= sz; x += xy_step, s += st_step)
-        {    
-            _v.push_back({x, y, 0, s, t, i, 0, 0, 1});
-            i = -i;
-        }    
-    for(uint sq = 0; sq < slice * slice; sq++)
-    {
-         uint16_t o = sq / slice + sq;
-         uint16_t r = o + 1;
-         uint16_t u = r + slice ;
-         uint16_t d = u + 1;
-        _i.insert(_i.end(),{o,r,d,d,u,o}); 
-    }
-    return make(_v,_i,GL_TRIANGLES);
-}
-
 mesh::ptr mesh::make_cube(float x, float y, float t)
 {
     auto w = x * .5f;
