@@ -1,5 +1,7 @@
 #include "micro.h"
 
+_MODULE("MESH");
+
 using namespace math;
 
 mesh::mesh(const std::vector<gl::vertex>  &v, const std::vector<uint16_t> &i, GLenum draw) :
@@ -8,7 +10,6 @@ mesh::mesh(const std::vector<gl::vertex>  &v, const std::vector<uint16_t> &i, GL
     draw_by(draw)
        
 {
-    INFO("create mesh from vector");
     glGenBuffers(1, &_id);
     glBindBuffer(GL_ARRAY_BUFFER, _id);
     glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(gl::vertex) , &vertexes[0], GL_STATIC_DRAW);

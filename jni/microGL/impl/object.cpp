@@ -1,6 +1,8 @@
 #include "micro.h"
 using namespace math;
 
+_MODULE("OBJECT");
+
 object::object(mesh::cref _mesh, material::cref _mat):
     _mesh(_mesh),
     _material(_mat)

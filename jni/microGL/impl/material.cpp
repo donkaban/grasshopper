@@ -1,5 +1,7 @@
 #include "micro.h"
 
+_MODULE("MATERIAL");
+
 void _check(GLuint id)  
 {
     int ok = 0;
@@ -20,7 +22,7 @@ void _check(GLuint id)
 
 material::material(strref sh)
 {
-    INFO("create material '%s'", sh.c_str());
+    INFO("create from ", sh);
     std::string vstr = "precision highp float;\n#define VERTEX\n"   + stream(sh).str();
     std::string fstr = "precision highp float;\n#define FRAGMENT\n" + stream(sh).str();
     auto v_src = vstr.c_str();
@@ -52,7 +54,6 @@ void gl::attr_t::lookup(int id)
     p = glGetAttribLocation(id,"position");
     u = glGetAttribLocation(id,"uv");
     n = glGetAttribLocation(id,"normal");
-    INFO("lookup: p[%d] u[%d] n[%d]",p,u,n);
 }
 void gl::unif_t::lookup(int id)
 {

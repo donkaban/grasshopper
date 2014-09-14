@@ -1,28 +1,22 @@
 #ifndef __GRASSHOPPER_MICROGL_API__
 #define __GRASSHOPPER_MICROGL_API__
 
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include <cstdlib>
+
 #include <chrono>
 
-#include <android/log.h>
 #include <android/asset_manager.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
 #include "minimath.h"
 #include "detail.h"
+#include "logger.h"
 
 using strref = const std::string &;
-
-#define TAG "[GRASSHOPPER]"
-#define INFO(...)  __android_log_print(ANDROID_LOG_WARN,TAG,__VA_ARGS__)
-#define ERROR(...) __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
-#define FATAL(...) {ERROR(__VA_ARGS__); std::abort();}
 
 template <typename T, typename ...A>
 struct Iref 
@@ -38,7 +32,6 @@ public:
 protected:
     GLuint _id  = -1;
 };
-
 
 class material : public Iref<material,strref>
 {

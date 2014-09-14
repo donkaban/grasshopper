@@ -1,6 +1,8 @@
 #include "microGL/micro.h"
 #include "terrain/terrain.h"
 
+_MODULE("MAIN");
+
 
 class my_app : public app
 {
@@ -12,16 +14,16 @@ class my_app : public app
         auto tex2 = image::make("textures/red.tga");
         auto hmap = image::make("textures/tile.tga");
         
-        // for(int x = -2; x <= 2; x ++)
-        //     for(int y = -2; y <= 2; y ++)
-        // {        
-        //     auto cube = object::make (cube_mesh, cube_mat);
-        //     cube->set_texture(0,tex1);
-        //     cube->set_texture(1,tex2);
-        //     cube->translate(math::vec3(x,y,-15));
-        //     cubes.push_back(cube);
-        //     get_scene()->add(cube);
-        // }
+        for(int x = -2; x <= 2; x ++)
+            for(int y = -2; y <= 2; y ++)
+        {        
+            auto cube = object::make (cube_mesh, cube_mat);
+            cube->set_texture(0,tex1);
+            cube->set_texture(1,tex2);
+            cube->translate(math::vec3(x,y,-15));
+            cubes.push_back(cube);
+            get_scene()->add(cube);
+        }
    
         back = object::make
         (
@@ -33,14 +35,16 @@ class my_app : public app
         back->rotate(math::vec3( -60* RAD2DEG,0,0));
      
         get_scene()->add(back);
+ 
     }
     void onUpdate(float dt) final
     {
-      
+      static size_t i = 0;
        for(auto &cube : cubes)
         cube->rotate(math::vec3(0.01,0.01,.01)) ;
 
-        back->rotate(math::vec3(0.00,0.00,.01)) ;
+      back->rotate(math::vec3(0.00,0.00,.01)) ;
+      PRINT("counter: ", ++i);     
 
     }   
 private:

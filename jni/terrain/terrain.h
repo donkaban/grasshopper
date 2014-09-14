@@ -13,11 +13,7 @@ public:
 	static mesh::ptr make_tile(float, uint16_t, float, image::cref);
 private:
 
-
-
-
-
-
+	mesh::ptr tiles[9];
 };
 
 

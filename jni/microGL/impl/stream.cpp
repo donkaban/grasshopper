@@ -1,5 +1,7 @@
 #include "micro.h"
  
+_MODULE("FILE");
+
 AAssetManager * stream::_am;
 
 std::string stream::str()
@@ -15,7 +17,7 @@ stream::stream(strref filename)
         FATAL("asset manager hasn't initalized");
     _file = AAssetManager_open(_am,filename.c_str(), AASSET_MODE_UNKNOWN);
     if(!_file)
-        FATAL("can't open file '%s'",filename.c_str());
+        FATAL("can't open file ",filename);
     _size = AAsset_getLength(_file);   
 }
 stream::~stream()

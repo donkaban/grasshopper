@@ -1,12 +1,14 @@
 #include "micro.h"
 using namespace math;
 
+_MODULE("SCENE");
+
 std::chrono::time_point<std::chrono::system_clock> scene::start_time = std::chrono::system_clock::now();
 
 scene::scene(float f,float a, float zn, float zf) :
     prj_m(mat4::perspective(f, a, zn, zf))
 {
-    INFO("create scene : fov: %.2f, near: %.1f, far: %.1f",f,zn,zf);
+    INFO("create scene : fov:", f, ", near: ",zn,", far: ",zf);
 } 
 
 void scene::translate(vec3::cref v) {iview_m *= mat4::translate(v);}
