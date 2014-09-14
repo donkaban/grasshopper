@@ -132,6 +132,10 @@ public:
     virtual void onInit()        {};
     virtual void onUpdate(float) {};
     virtual void onExit()        {};
+    virtual void onTouch(uint,uint)    {};
+    virtual void onMove(int, int)      {};
+    virtual void onRelease(uint,uint)  {};
+
     inline scene::ptr & get_scene()       {return _scene;}
     inline void set_scene(scene::cref &s) {_scene = s;}
     

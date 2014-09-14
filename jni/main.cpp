@@ -39,14 +39,20 @@ class my_app : public app
     }
     void onUpdate(float dt) final
     {
-      static size_t i = 0;
        for(auto &cube : cubes)
         cube->rotate(math::vec3(0.01,0.01,.01)) ;
 
       back->rotate(math::vec3(0.00,0.00,.01)) ;
-      PRINT("counter: ", ++i);     
-
+     
     }   
+
+    void onTouch(uint x,uint y)    {}//PRINT("TOUCH: ",x,":",y);};
+    void onMove(int dx, int dy)    {PRINT("MOVE: ",dx,":",dy);};
+    void onRelease(uint x,uint y)  {}//PRINT("RELEASE: ",x,":",y);};
+
+
+
+
 private:
     std::vector<object::ptr> cubes;
     object::ptr back;
