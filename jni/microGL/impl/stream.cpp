@@ -14,10 +14,10 @@ std::string stream::str()
 stream::stream(strref filename)      
 {
     if(!_am)
-        FATAL("asset manager hasn't initalized");
+        ABORT("asset manager hasn't initalized");
     _file = AAssetManager_open(_am,filename.c_str(), AASSET_MODE_UNKNOWN);
     if(!_file)
-        FATAL("can't open file ",filename);
+        ABORT("can't open file ",filename);
     _size = AAsset_getLength(_file);   
 }
 stream::~stream()

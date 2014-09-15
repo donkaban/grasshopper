@@ -35,9 +35,9 @@ template<typename ... T>
 void jCall(JNIEnv *  env,const char *methodName, const char *methoodSignature,T && ... args)
 {
     auto klass = env->FindClass(MAIN_CLASS_NAME);
-    if(!klass)  FATAL("can't find engine class");
+    if(!klass)  ABORT("can't find engine class");
     auto method = env->GetStaticMethodID(klass, methodName,methoodSignature); 
-    if(!method) FATAL("can't find method %s.%s(%s)", MAIN_CLASS_NAME,methodName, methoodSignature);
+    if(!method) ABORT("can't find method %s.%s(%s)", MAIN_CLASS_NAME,methodName, methoodSignature);
      env->CallVoidMethod(klass,method,args...);
 }  
 
@@ -76,7 +76,7 @@ DECL_VOID(draw)(JNIEnv *env, jobject obj)
         if(input.released) {application->onRelease(input.mx, input.my); input.released = false;}
        
     }
-    application->onUpdate(1); // fix: dt!
+    application->onUpdate(1); // fixit: dt!
     application->get_scene()->render();
 }
 
@@ -88,7 +88,7 @@ DECL_VOID(resize)(JNIEnv *env, jobject obj, jint w, jint h)
     glClearColor(.2, .2, .3, 0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL); 
-    application->set_scene(scene::make(45,static_cast<float>(w)/static_cast<float>(h),0.1,60));
+    application->set_scene(scene::make(w*1,h*1));
     application->onInit();
 }
 
@@ -98,7 +98,7 @@ DECL_BOOL(onTouch) (JNIEnv *env, jobject obj, jint x, jint y)
     input.mx = x;
     input.my = y;
     input.pressed = true;
-    return 1;
+    return true;
 }
 
 DECL_BOOL(onRelease) (JNIEnv *env, jobject obj, jint x, jint y)
@@ -107,7 +107,7 @@ DECL_BOOL(onRelease) (JNIEnv *env, jobject obj, jint x, jint y)
     input.mx = x;
     input.my = y;
     input.released = true;
-    return 1;
+    return true;
 }
 DECL_BOOL(onMove) (JNIEnv *env, jobject obj, jint x, jint y)
 {
@@ -117,7 +117,7 @@ DECL_BOOL(onMove) (JNIEnv *env, jobject obj, jint x, jint y)
     input.mx = x;
     input.my = y;
     input.moved = true;
-    return 1;
+    return true;
 
 }
 

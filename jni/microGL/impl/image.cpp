@@ -18,7 +18,7 @@ image::image(strref filename)
     _width  = header.width;
     _height = header.height;
     if(((_bpp != 24) && (_bpp != 32)) || header.useless[2] != 2)
-        FATAL("no support for this image format");
+        ABORT("no support for this tga image format");
     auto size = _bpp * _width * _height / 8;
     _data.resize(size);
     f.read((char *)&_data[0], _data.size());

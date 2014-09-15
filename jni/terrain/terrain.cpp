@@ -32,5 +32,5 @@ mesh::ptr terrain::make_tile(float size, uint16_t slice, float mul, image::cref 
          uint16_t d = u + 1;
         _i.insert(_i.end(),{o,r,d,d,u,o}); 
     }
-    return mesh::make(_v,_i,GL_TRIANGLES);
+    return mesh::make(_v,_i,GL_LINE_STRIP);
 }

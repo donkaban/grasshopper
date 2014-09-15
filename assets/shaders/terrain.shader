@@ -7,9 +7,9 @@ varying vec3 v_eye;
 
 uniform float u_time;
 
-const vec3 LIGHT_POS = vec3(0,10,0);
+const vec3 LIGHT_POS = vec3(0,0,0);
 const vec3 EYE_POS   = vec3(0,0,0);
-const vec4 D_COLOR   = vec4(1,1,1,1);
+const vec4 D_COLOR   = vec4(0,1,0,1);
 const vec4 S_COLOR   = vec4(.3,.3,.3,1);
 
 
@@ -20,7 +20,7 @@ const vec4 S_COLOR   = vec4(.3,.3,.3,1);
 
     uniform mat4  u_model;
     uniform mat4  u_prj;    
-    uniform mat4  u_iview; 
+    uniform mat4  u_view; 
     void main()
     {
         vec4 p4 = vec4(position,1) * u_model;
@@ -34,7 +34,7 @@ const vec4 S_COLOR   = vec4(.3,.3,.3,1);
         v_eye   = normalize(EYE_POS - p3);
         v_half  = normalize(v_light + v_eye);
    
-        gl_Position = p4 * u_iview * u_prj ;
+        gl_Position = p4 * u_view * u_prj ;
     }
 #endif
 
@@ -43,14 +43,14 @@ const vec4 S_COLOR   = vec4(.3,.3,.3,1);
         
     void main() 
     {
-            vec4 col = texture2D(texture0, v_uv.xy);
-            float shadow = max(dot(v_norm,v_light),.2);
-            vec3  phong  = reflect(-v_eye,v_norm);
-            vec3 blinn  = normalize(v_eye + v_norm);
+            vec4 col = vec4(1,1,1,1);//texture2D(texture0, v_uv.xy);
+            // float shadow = max(dot(v_norm,v_light),.2);
+            // vec3  phong  = reflect(-v_eye,v_norm);
+            // vec3  blinn  = normalize(v_eye + v_norm);
 
-            float spec   = pow(max(dot(v_light,phong),.0), 35.0);
-            col *= shadow * D_COLOR;              
-            col += spec   * S_COLOR ;
+            // float spec   = pow(max(dot(v_light,blinn),.0), 55.0);
+            // col *= shadow * D_COLOR;              
+            // col += spec   * S_COLOR ;
 
 
         gl_FragColor = col;

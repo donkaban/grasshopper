@@ -1,7 +1,14 @@
-#ifndef __GRASSHOPPER_GL_DETAIL_
-#define __GRASSHOPPER_GL_DETAIL_
+#ifndef __GRASSHOPPER_DETAIL_
+#define __GRASSHOPPER_DETAIL_
+
+#include <string>
+#include <android/asset_manager.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 
 #include "minimath.h"
+
+using strref = const std::string &;
 
 namespace gl {
 struct vertex
@@ -14,7 +21,7 @@ struct vertex
             math::vec3 uv;           // :)  
             math::vec3 normal;
         };
-        float data[15];
+        float data[sizeof(math::vec3) * 3];
     };
     vertex(const std::initializer_list<float> &l) {std::memcpy(data,l.begin(),sizeof(data));} 
 };
@@ -30,8 +37,23 @@ struct unif_t
     int t[4];  
     void lookup(int);
 }; 
-
 }
 
+struct stream // motivation : RIAA
+{
+public:
+    stream(strref);
+   ~stream();
+    void   read(char *, size_t);
+    void   seek(size_t pos);
+    size_t size() const;
+    std::string str();
+    
+    static void init(AAssetManager *);
+private:
+    AAsset * _file;
+    size_t   _size {};
+    static AAssetManager * _am;
+};
 
 #endif

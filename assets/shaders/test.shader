@@ -1,7 +1,7 @@
 varying vec3 v_position;
 varying vec3 v_uv;
 varying vec3 v_normal;
-uniform float       u_time;
+uniform float u_time;
 
 #ifdef VERTEX
     attribute vec3 position;
@@ -10,11 +10,11 @@ uniform float       u_time;
 
     uniform mat4  u_model;
     uniform mat4  u_prj;    
-    uniform mat4  u_iview; 
+    uniform mat4  u_view; 
     void main()
     {
         v_uv = uv;
-        gl_Position = vec4(position,1) * u_model * u_iview * u_prj ;
+        gl_Position = vec4(position,1) * u_model * u_view * u_prj ;
     }
 #endif
 

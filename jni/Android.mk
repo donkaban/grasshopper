@@ -11,6 +11,7 @@ MICRO_SRC:= microGL/impl/minimath.cpp    \
 			microGL/impl/mesh.cpp        \
 			microGL/impl/object.cpp      \
 			microGL/impl/scene.cpp       \
+			microGL/impl/camera.cpp      \
 			microGL/impl/app.cpp         \
 
 TERRAIN_SRC:= terrain/terrain.cpp

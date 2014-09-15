@@ -5,14 +5,10 @@ _MODULE("SCENE");
 
 std::chrono::time_point<std::chrono::system_clock> scene::start_time = std::chrono::system_clock::now();
 
-scene::scene(float f,float a, float zn, float zf) :
-    prj_m(mat4::perspective(f, a, zn, zf))
+scene::scene(int w, int h) 
 {
-    INFO("create scene : fov:", f, ", near: ",zn,", far: ",zf);
+    _cam = camera::make(60,static_cast<float>(w)/static_cast<float>(h),0.1,300);
 } 
-
-void scene::translate(vec3::cref v) {iview_m *= mat4::translate(v);}
-void scene::rotate(vec3::cref v)    {iview_m *= mat4::rot_x(v.x) * mat4::rot_y(v.y) * mat4::rot_z(v.z) ;}
 
 void scene::add(object::cref obj)   
 {
@@ -28,8 +24,8 @@ void scene::render()
         if(!obj->_enabled) return;
         auto mat = obj->_material;
         glUseProgram(mat->getID());
-        glUniformMatrix4fv(mat->uni().prj,   1,GL_FALSE, prj_m.data);
-        glUniformMatrix4fv(mat->uni().iview, 1,GL_FALSE, iview_m.data);
+        glUniformMatrix4fv(mat->uni().prj,   1,GL_FALSE, _cam->prj().data);
+        glUniformMatrix4fv(mat->uni().iview, 1,GL_FALSE, _cam->view().data);
         glUniform1f(mat->uni().time, cur_time);
         obj->render();
     }   

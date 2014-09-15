@@ -79,6 +79,72 @@ mat4 mat4::frustum(float l, float r, float b, float t, float n, float f) //fix: 
     return mat4({2.0f*n/dx,0,(r+l)/dx,0,0,2.0f*n/dy,(t+b)/dy,0,0,0,-(f+n)/dz,-2.0f*f*n/dz,0,0,-1,0});
 }
 
+mat4 mat4::inverse() const
+{
+    mat4 tmp = *this;
+    tmp.inv();
+    return tmp;
+}   
+
+void mat4::inv() // wasted space and time :(
+{
+    double det, invDet;
+
+    float det2_01_01 = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+    float det2_01_02 = m[0][0] * m[1][2] - m[0][2] * m[1][0];
+    float det2_01_03 = m[0][0] * m[1][3] - m[0][3] * m[1][0];
+    float det2_01_12 = m[0][1] * m[1][2] - m[0][2] * m[1][1];
+    float det2_01_13 = m[0][1] * m[1][3] - m[0][3] * m[1][1];
+    float det2_01_23 = m[0][2] * m[1][3] - m[0][3] * m[1][2];
+
+    float det3_201_012 = m[2][0] * det2_01_12 - m[2][1] * det2_01_02 + m[2][2] * det2_01_01;
+    float det3_201_013 = m[2][0] * det2_01_13 - m[2][1] * det2_01_03 + m[2][3] * det2_01_01;
+    float det3_201_023 = m[2][0] * det2_01_23 - m[2][2] * det2_01_03 + m[2][3] * det2_01_02;
+    float det3_201_123 = m[2][1] * det2_01_23 - m[2][2] * det2_01_13 + m[2][3] * det2_01_12;
+    det = ( - det3_201_123 * m[3][0] + det3_201_023 * m[3][1] - det3_201_013 * m[3][2] + det3_201_012 * m[3][3] );
+    invDet = 1.0f / det;
+    float det2_03_01 = m[0][0] * m[3][1] - m[0][1] * m[3][0];
+    float det2_03_02 = m[0][0] * m[3][2] - m[0][2] * m[3][0];
+    float det2_03_03 = m[0][0] * m[3][3] - m[0][3] * m[3][0];
+    float det2_03_12 = m[0][1] * m[3][2] - m[0][2] * m[3][1];
+    float det2_03_13 = m[0][1] * m[3][3] - m[0][3] * m[3][1];
+    float det2_03_23 = m[0][2] * m[3][3] - m[0][3] * m[3][2];
+    float det2_13_01 = m[1][0] * m[3][1] - m[1][1] * m[3][0];
+    float det2_13_02 = m[1][0] * m[3][2] - m[1][2] * m[3][0];
+    float det2_13_03 = m[1][0] * m[3][3] - m[1][3] * m[3][0];
+    float det2_13_12 = m[1][1] * m[3][2] - m[1][2] * m[3][1];
+    float det2_13_13 = m[1][1] * m[3][3] - m[1][3] * m[3][1];
+    float det2_13_23 = m[1][2] * m[3][3] - m[1][3] * m[3][2];
+    float det3_203_012 = m[2][0] * det2_03_12 - m[2][1] * det2_03_02 + m[2][2] * det2_03_01;
+    float det3_203_013 = m[2][0] * det2_03_13 - m[2][1] * det2_03_03 + m[2][3] * det2_03_01;
+    float det3_203_023 = m[2][0] * det2_03_23 - m[2][2] * det2_03_03 + m[2][3] * det2_03_02;
+    float det3_203_123 = m[2][1] * det2_03_23 - m[2][2] * det2_03_13 + m[2][3] * det2_03_12;
+    float det3_213_012 = m[2][0] * det2_13_12 - m[2][1] * det2_13_02 + m[2][2] * det2_13_01;
+    float det3_213_013 = m[2][0] * det2_13_13 - m[2][1] * det2_13_03 + m[2][3] * det2_13_01;
+    float det3_213_023 = m[2][0] * det2_13_23 - m[2][2] * det2_13_03 + m[2][3] * det2_13_02;
+    float det3_213_123 = m[2][1] * det2_13_23 - m[2][2] * det2_13_13 + m[2][3] * det2_13_12;
+    float det3_301_012 = m[3][0] * det2_01_12 - m[3][1] * det2_01_02 + m[3][2] * det2_01_01;
+    float det3_301_013 = m[3][0] * det2_01_13 - m[3][1] * det2_01_03 + m[3][3] * det2_01_01;
+    float det3_301_023 = m[3][0] * det2_01_23 - m[3][2] * det2_01_03 + m[3][3] * det2_01_02;
+    float det3_301_123 = m[3][1] * det2_01_23 - m[3][2] * det2_01_13 + m[3][3] * det2_01_12;
+    m[0][0] = - det3_213_123 * invDet;
+    m[1][0] = + det3_213_023 * invDet;
+    m[2][0] = - det3_213_013 * invDet;
+    m[3][0] = + det3_213_012 * invDet;
+    m[0][1] = + det3_203_123 * invDet;
+    m[1][1] = - det3_203_023 * invDet;
+    m[2][1] = + det3_203_013 * invDet;
+    m[3][1] = - det3_203_012 * invDet;
+    m[0][2] = + det3_301_123 * invDet;
+    m[1][2] = - det3_301_023 * invDet;
+    m[2][2] = + det3_301_013 * invDet;
+    m[3][2] = - det3_301_012 * invDet;
+    m[0][3] = - det3_201_123 * invDet;
+    m[1][3] = + det3_201_023 * invDet;
+    m[2][3] = - det3_201_013 * invDet;
+    m[3][3] = + det3_201_012 * invDet;
+}
+
 const vec3 vec3::zero = vec3(0,0,0);
 const mat4 mat4::identity = mat4({1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1});
 

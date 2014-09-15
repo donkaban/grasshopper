@@ -1,6 +1,8 @@
 #ifndef __GRASSHOPPER_MATH__
 #define __GRASSHOPPER_MATH__
 
+// todo: strip it!
+
 #include <cmath>
 #include <cstring>
 #include <initializer_list>
@@ -57,7 +59,8 @@ struct mat4
 
     mat4   operator*  (cref) const;
     mat4 & operator*= (cref);
-   
+    mat4 inverse() const;
+    void inv();
     void pos(vec3::cref);
     void rot(vec3::cref);
     vec3 pos() const ;

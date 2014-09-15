@@ -4,13 +4,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
-#include <string>
-
 #include <chrono>
-
-#include <android/asset_manager.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
 
 #include "minimath.h"
 #include "detail.h"
@@ -33,7 +27,8 @@ protected:
     GLuint _id  = -1;
 };
 
-class material : public Iref<material,strref>
+class material : public 
+    Iref<material,strref>
 {
 public:
     material(strref);
@@ -45,7 +40,8 @@ private:
     gl::unif_t uniforms;
 };
 
-class mesh : public Iref<mesh,const std::vector<gl::vertex> &,const std::vector<uint16_t> &,GLenum>
+class mesh : public 
+    Iref<mesh,const std::vector<gl::vertex> &,const std::vector<uint16_t> &,GLenum>
 {
 public:
     mesh(const std::vector<gl::vertex> &, const std::vector<uint16_t> &, GLenum draw=GL_TRIANGLES);
@@ -72,9 +68,10 @@ struct image : public Iref<image, strref>
     int _height;
 };
 
-class object : public Iref<object, mesh::cref, material::cref>
+class object : public 
+    Iref<object, mesh::cref, material::cref>
 {
-    friend class scene; // nb: ugly hackaton style - no time for getters/setters :)
+    friend class scene; // fixit: ugly hackaton style - no getters/setters :)
 public: 
     object(mesh::cref, material::cref);
    ~object();   
@@ -91,47 +88,48 @@ private:
     image::ptr    _texture[4];
 };
 
-class scene : public Iref<scene, float,float,float,float>
+class camera : public 
+    Iref<camera, float,float,float,float>
 {
 public:
-    scene(float,float,float,float);
-    void add(object::cref);
+    camera(float,float,float,float);
     void translate(math::vec3::cref);
-    void rotate(math::vec3::cref);
+    void rot_x(float);
+    void rot_y(float);
+    void rot_z(float);
+    inline math::mat4::cref prj()  const {return _prj_m;}
+    inline math::mat4::cref view() const {return _view_m;}
+    inline math::vec3       pos()  const {return _transform.pos();}
+
+private:
+    math::mat4 _transform;  
+    math::mat4 _prj_m;     
+    math::mat4 _view_m;    
+};  
+
+class scene : public 
+    Iref<scene, int, int>
+{
+public:
+    scene(int, int);
+    void add(object::cref);
     void render();
-    void wire(bool);   
+    inline camera::cref cam() const {return _cam;}
 
     static float time(); 
 private:
-    math::mat4 prj_m;     
-    math::mat4 iview_m;    
+    camera::ptr _cam;
     std::vector<object::ptr> render_list;
     static std::chrono::time_point<std::chrono::system_clock> start_time;
 };
 
-struct stream // motivation : RIAA
+class app : public 
+    Iref<app>  
 {
 public:
-    stream(strref);
-   ~stream();
-    void   read(char *, size_t);
-    void   seek(size_t pos);
-    size_t size() const;
-    std::string str();
-    
-    static void init(AAssetManager *);
-private:
-    AAsset * _file;
-    size_t   _size {};
-    static AAssetManager * _am;
-};
-
-class app : public Iref<app>  
-{
-public:
-    virtual void onInit()        {};
-    virtual void onUpdate(float) {};
-    virtual void onExit()        {};
+    virtual void onInit()              {};
+    virtual void onUpdate(float)       {};
+    virtual void onExit()              {};
     virtual void onTouch(uint,uint)    {};
     virtual void onMove(int, int)      {};
     virtual void onRelease(uint,uint)  {};
