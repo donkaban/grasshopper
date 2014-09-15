@@ -33,7 +33,7 @@ struct attr_t
 }; 
 struct unif_t 
 {
-    int model,iview,prj,time;
+    int model,iview,prj,time,eye;
     int t[4];  
     void lookup(int);
 }; 

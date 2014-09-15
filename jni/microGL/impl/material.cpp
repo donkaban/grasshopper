@@ -61,6 +61,7 @@ void gl::unif_t::lookup(int id)
     iview = glGetUniformLocation(id,"u_view");
     prj   = glGetUniformLocation(id,"u_prj");
     time  = glGetUniformLocation(id,"u_time");
+    eye  = glGetUniformLocation(id,"u_eye");
     t[0]  = glGetUniformLocation(id,"texture0");
     t[1]  = glGetUniformLocation(id,"texture1");
     t[2]  = glGetUniformLocation(id,"texture2");

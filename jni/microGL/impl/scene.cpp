@@ -7,7 +7,7 @@ std::chrono::time_point<std::chrono::system_clock> scene::start_time = std::chro
 
 scene::scene(int w, int h) 
 {
-    _cam = camera::make(60,static_cast<float>(w)/static_cast<float>(h),0.1,300);
+    _cam = camera::make(35,static_cast<float>(w)/static_cast<float>(h),0.1,300);
 } 
 
 void scene::add(object::cref obj)   
@@ -19,6 +19,7 @@ void scene::add(object::cref obj)
 void scene::render()
 {   
     auto cur_time = time();
+    auto eye = _cam->pos();
     for(const auto & obj : render_list)
     {
         if(!obj->_enabled) return;
@@ -26,6 +27,8 @@ void scene::render()
         glUseProgram(mat->getID());
         glUniformMatrix4fv(mat->uni().prj,   1,GL_FALSE, _cam->prj().data);
         glUniformMatrix4fv(mat->uni().iview, 1,GL_FALSE, _cam->view().data);
+        glUniform3f(mat->uni().eye,eye.x,eye.y,eye.z);
+        
         glUniform1f(mat->uni().time, cur_time);
         obj->render();
     }   

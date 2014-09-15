@@ -80,6 +80,9 @@ public:
     void set_texture(int, image::cref);
     void translate(math::vec3::cref);
     void rotate(math::vec3::cref);
+    
+    inline math::mat4 & T()  {return _transform;}
+
 private:
     bool          _enabled = true;
     math::mat4    _transform;
@@ -93,14 +96,13 @@ class camera : public
 {
 public:
     camera(float,float,float,float);
-    void translate(math::vec3::cref);
-    void rot_x(float);
-    void rot_y(float);
-    void rot_z(float);
-    inline math::mat4::cref prj()  const {return _prj_m;}
-    inline math::mat4::cref view() const {return _view_m;}
-    inline math::vec3       pos()  const {return _transform.pos();}
 
+    void move(math::vec3::cref);
+    void rotate(float);
+
+    math::mat4::cref prj()  const;
+    math::mat4::cref view() const;
+    math::vec3       pos()  const;
 private:
     math::mat4 _transform;  
     math::mat4 _prj_m;     

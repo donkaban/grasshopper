@@ -52,10 +52,12 @@ mat4 & mat4::operator*= (cref a)
 }
 
 void mat4::pos(vec3::cref v) {m[0][3] = v.x; m[1][3] = v.y; m[2][3] = v.z;}
-void mat4::rot(vec3::cref v) {*this = (*this) * rot_x(v.x) * rot_y(v.y) * rot_z(v.z);}
+void mat4::rotate(vec3::cref v) {*this = (*this) * rot_x(v.x) * rot_y(v.y) * rot_z(v.z);}
 
-vec3 mat4::pos() const {return {m[0][3],m[1][3],m[2][3]};}
-vec3 mat4::rot() const {return {m[0][3],m[1][3],m[2][3]};}
+vec3 mat4::pos()     const {return {m[0][3],m[1][3],m[2][3]};}
+vec3 mat4::up()      const {return {m[0][1],m[1][1],m[2][1]};}
+vec3 mat4::forward() const {return {-m[0][2],-m[1][2],-m[2][2]};}
+vec3 mat4::right()   const {return {m[0][0],m[1][0],m[2][0]};}
 
 mat4 mat4::rot_x(float a) {auto s=std::sin(a); auto c=std::cos(a); return mat4({1,0,0,0,0,c,-s,0,0,s,c,0,0,0,0,1});}
 mat4 mat4::rot_y(float a) {auto s=std::sin(a); auto c=std::cos(a); return mat4({c,0,s,0,0,1,0,0,-s,0,c,0,0,0,0,1});}

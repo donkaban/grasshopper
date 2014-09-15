@@ -4,16 +4,27 @@
 #include "micro.h"
 
 
-class terrain : public Iref<terrain>
+class terrain : public Iref<terrain,scene::cref,float, uint16_t, float, strref, strref>
 {
 public:	
-	terrain();
-	
 
-	static mesh::ptr make_tile(float, uint16_t, float, image::cref);
+	terrain(scene::cref, float, uint16_t, float, strref, strref);
+
 private:
+	mesh::ptr make_tile(float, uint16_t, float, image::cref);
+	mesh::ptr make_leaf(float, float); 
+	std::vector<object::ptr> _leafs;
 
-	mesh::ptr tiles[9];
+	image::ptr  	_hmap;
+	image::ptr  	_tex0;
+	scene::cref 	_scene;
+	material::ptr 	_tile_mat;
+	material::ptr 	_leaf_mat;
+	mesh::ptr       _leaf_mesh;
+
+	float 		_tile_size; 
+	uint16_t 	_tile_slice; 
+	float 		_tile_h;
 };
 
 

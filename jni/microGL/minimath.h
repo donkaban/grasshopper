@@ -61,11 +61,15 @@ struct mat4
     mat4 & operator*= (cref);
     mat4 inverse() const;
     void inv();
+    
     void pos(vec3::cref);
-    void rot(vec3::cref);
-    vec3 pos() const ;
-    vec3 rot() const;
-
+    void rotate(vec3::cref);
+   
+    vec3 pos()      const ;
+    vec3 up()       const;
+    vec3 forward()  const;
+    vec3 right()    const;
+    
     static mat4 rot_x(float);
     static mat4 rot_y(float);
     static mat4 rot_z(float);

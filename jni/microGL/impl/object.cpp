@@ -15,7 +15,7 @@ object::~object()
 
 void object::set_texture(int n, image::cref img) {_texture[n] = img;} //fix: unsafe! 
 void object::translate(vec3::cref v) {_transform *= mat4::translate(v);}
-void object::rotate(vec3::cref v)    {_transform *= mat4::rot_x(v.x) * mat4::rot_y(v.y) * mat4::rot_z(v.z) ;}
+void object::rotate(vec3::cref v)    {_transform.rotate(v);}
 
 void object::render()
 {
