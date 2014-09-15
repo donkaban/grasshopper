@@ -7,12 +7,16 @@
 class terrain : public Iref<terrain,scene::cref,float, uint16_t, float, strref, strref>
 {
 public:	
+	const float   GRASS_DIV       = 0.1;
+	const uint8_t GRASS_THRASHOLD = 30;
+
 
 	terrain(scene::cref, float, uint16_t, float, strref, strref);
 
 private:
-	mesh::ptr make_tile(float, uint16_t, float, image::cref);
-	mesh::ptr make_leaf(float, float); 
+	mesh::ptr make_tile();
+	mesh::ptr make_leaf(float, float);
+
 	std::vector<object::ptr> _leafs;
 
 	image::ptr  	_hmap;

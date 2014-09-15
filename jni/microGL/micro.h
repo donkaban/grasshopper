@@ -61,11 +61,13 @@ struct image : public Iref<image, strref>
 {
     image(strref);
     virtual ~image();
-
-    std::vector<uint8_t> _data;
+    pixel get_pixel(float,float);
+private:   
     int _bpp;    
     int _width;   
     int _height;
+    std::vector<uint8_t> _data;
+
 };
 
 class object : public 

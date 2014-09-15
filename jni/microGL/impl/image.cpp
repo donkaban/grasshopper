@@ -40,3 +40,14 @@ image::~image()
     if(!glIsTexture(getID())) return;
     glDeleteTextures(1, &_id);
 }
+
+pixel image::get_pixel(float x, float y)
+{
+    if(x > 1 || x < 0 || y > 1 || y < 0)
+        return {0,0,0,0};
+    int bpp = _bpp / 8;
+    uint tx  = x * _width;
+    int ty  = y * _height;
+    int ndx = (tx * bpp) + (ty * _width * bpp);
+    return {_data[ndx],_data[ndx+1],_data[ndx+2],_data[ndx+3]};          
+};

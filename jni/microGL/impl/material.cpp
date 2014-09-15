@@ -15,7 +15,7 @@ void _check(GLuint id)
         {
             message.resize(len);
             glGetShaderInfoLog(id, len, NULL, &message[0]);
-            ABORT("error compile shader: %s",message.c_str());
+            ABORT("error compile shader: ",message.c_str());
         }
     }
 }

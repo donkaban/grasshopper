@@ -7,7 +7,7 @@ class my_app : public app
 {
     void onInit() final
     {
-        terrain::make(get_scene(),60,30,5,"textures/tile_hmap.tga","textures/tile_tex.tga");
+        terrain::make(get_scene(),60,20,10,"textures/tile_hmap.tga","textures/tile_tex.tga");
     }
 
 
