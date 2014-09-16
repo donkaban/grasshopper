@@ -1,5 +1,7 @@
 varying vec3 v_uv;
 varying vec3 v_eye;
+varying float v_dist;
+
 
 #ifdef VERTEX
     attribute vec3 position;
@@ -16,6 +18,7 @@ varying vec3 v_eye;
         v_uv    = uv;
         vec4 pos = vec4(position,1) * u_model;
         v_eye   = normalize(u_eye - pos.xyz);
+        v_dist = distance(u_eye, pos.xyz);
         gl_Position = pos * u_view * u_prj ;
     }
 #endif
@@ -36,7 +39,7 @@ varying vec3 v_eye;
         vec3  blinn  = normalize(v_eye + normal);
         vec3  phong  = reflect(-v_eye,normal);
         float spec   = pow(max(dot(v_eye,blinn),0.), 55.0) ;
-
+        
         gl_FragColor = col * shadow + spec;
     }
 #endif

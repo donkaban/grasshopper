@@ -19,7 +19,7 @@
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="wire"
+            android:text=""
             android:id="@+id/checkBox" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
 </RelativeLayout>

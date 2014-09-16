@@ -4,8 +4,10 @@ using namespace math;
 _MODULE("OBJECT");
 
 object::object(mesh::cref _mesh, material::cref _mat):
+    _check(false),
     _mesh(_mesh),
     _material(_mat)
+  
 {
     INFO("create object");
 }
@@ -14,6 +16,7 @@ object::~object()
 {}
 
 void object::set_texture(int n, image::cref img) {_texture[n] = img;} //fix: unsafe! 
+
 void object::translate(vec3::cref v) {_transform *= mat4::translate(v);}
 void object::rotate(vec3::cref v)    {_transform.rotate(v);}
 
@@ -31,3 +34,6 @@ void object::render()
     }
     _mesh->render(_material); 
  }
+
+math::mat4 & object::T()   {return _transform;}
+void object::check(bool b) {_check = b;}

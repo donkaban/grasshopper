@@ -8,6 +8,7 @@ class my_app : public app
     void onInit() final
     {
         terrain::make(get_scene(),60,20,10,"textures/tile_hmap.tga","textures/tile_tex.tga");
+        get_scene()->set_culling(60);
     }
 
 

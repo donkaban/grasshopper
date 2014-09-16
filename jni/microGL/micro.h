@@ -78,20 +78,22 @@ public:
     object(mesh::cref, material::cref);
    ~object();   
     void render();
-
     void set_texture(int, image::cref);
     void translate(math::vec3::cref);
     void rotate(math::vec3::cref);
-    
-    inline math::mat4 & T()  {return _transform;}
+    math::mat4 & T(); 
+    void check(bool b);
 
 private:
-    bool          _enabled = true;
+    bool          _check;
     math::mat4    _transform;
+    
     mesh::ptr     _mesh;
     material::ptr _material;
     image::ptr    _texture[4];
 };
+
+
 
 class camera : public 
     Iref<camera, float,float,float,float>
@@ -102,6 +104,7 @@ public:
     void move(math::vec3::cref);
     void rotate(float);
 
+    math::mat4::cref T()   const;
     math::mat4::cref prj()  const;
     math::mat4::cref view() const;
     math::vec3       pos()  const;
@@ -118,10 +121,13 @@ public:
     scene(int, int);
     void add(object::cref);
     void render();
-    inline camera::cref cam() const {return _cam;}
+    camera::cref cam() const; 
+    void set_culling(float c);
 
     static float time(); 
+
 private:
+    float       _cull = 50.;
     camera::ptr _cam;
     std::vector<object::ptr> render_list;
     static std::chrono::time_point<std::chrono::system_clock> start_time;
