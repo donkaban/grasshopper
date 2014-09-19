@@ -28,7 +28,7 @@ void object::render()
         if(_material->uni().t[i] !=-1 && _texture[i])
         {
             glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, _texture[0]->getID()); 
+            glBindTexture(GL_TEXTURE_2D, _texture[i]->getID()); 
             glUniform1i(_material->uni().t[i],i);
         } 
     }
