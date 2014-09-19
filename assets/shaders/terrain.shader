@@ -1,6 +1,6 @@
 varying vec3 v_uv;
 varying vec3 v_eye;
-varying float v_dist;
+varying vec3 v_light;
 
 
 #ifdef VERTEX
@@ -17,8 +17,9 @@ varying float v_dist;
     {
         v_uv    = uv;
         vec4 pos = vec4(position,1) * u_model;
-        v_eye   = normalize(u_eye - pos.xyz);
-        v_dist = distance(u_eye, pos.xyz);
+        v_eye    = normalize(u_eye - pos.xyz);
+        v_light   = normalize(vec3(0,0,50) - pos.xyz);
+       
         gl_Position = pos * u_view * u_prj ;
     }
 #endif
@@ -33,12 +34,12 @@ varying float v_dist;
     
         vec4 col = texture2D(texture0, v_uv.xy);
         vec4 nrm = texture2D (texture1,v_uv.xy);
-        vec3 normal = normalize(2.0 * vec3(nrm) - 1.0);
+        vec3 normal = normalize(nrm.xyz);
   
-        float shadow = max(dot(normal,v_eye),0.0);
+        float shadow = max(dot(normal,v_light+v_eye),0.);
         vec3  blinn  = normalize(v_eye + normal);
         vec3  phong  = reflect(-v_eye,normal);
-        float spec   = pow(max(dot(v_eye,blinn),0.), 55.0) ;
+        float spec   = pow(max(dot(v_eye,phong),0.), 55.0) ;
         
         gl_FragColor = col * shadow + spec;
     }
