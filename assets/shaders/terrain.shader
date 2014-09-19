@@ -36,7 +36,7 @@ varying vec3 v_light;
         vec4 nrm = texture2D (texture1,v_uv.xy);
         vec3 normal = normalize(nrm.xyz);
   
-        float shadow = max(dot(normal,v_light+v_eye),0.);
+        float shadow = max(dot(normal,v_light),0.);
         vec3  blinn  = normalize(v_eye + normal);
         vec3  phong  = reflect(-v_eye,normal);
         float spec   = pow(max(dot(v_eye,phong),0.), 55.0) ;
